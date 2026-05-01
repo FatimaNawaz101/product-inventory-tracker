@@ -1,9 +1,12 @@
 class Product:
-    def __init__(self,product_name:str,product_code:int,product_current_stock:int,product_sale_price:float,product_manufacture_cost:float,product_monthly_production:int):
+    def __init__(self,product_name:str,product_code:int,product_current_stock:int,product_sale_price:float,product_manufacture_cost:float,product_monthly_production:int,initial_stock:int):
          self.setproduct_name(product_name)
          self.setproduct_code(product_code)
          self.setproduct_current_stock(product_current_stock)
          self.setproduct_sale_price(product_sale_price)
+         self.setproduct_manufacture_cost(product_manufacture_cost)
+         self.setproduct_monthly_production(product_monthly_production)
+         self.initial_stock=initial_stock
          self.monthly_units_manufactured=[]
          self.monthly_units_sold=[]
          
@@ -55,7 +58,14 @@ class Product:
         if month<1 or month>12:
             raise Exception("The provided month is not valid; enter a value between 1 and 12 ")
         self.monthly_units_sold.append(units)
-        
+        current_stock=self.initial_stock
+        for i in range(month): #to make sure sale of units is greater than current stock
+            current_stock+=self.monthly_units_manufactured[i]
+            current_stock-=self.monthly_units_sold[i]
+        if units> current_stock:
+            print("Sale of units should not be more than current stock")
+        return self.monthly_units_sold[month-1]
+            
     def getunits_sold_in_month(self,month):
         return self.monthly_units_sold[month-1]
     
